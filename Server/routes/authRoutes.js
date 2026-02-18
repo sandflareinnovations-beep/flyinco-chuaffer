@@ -11,7 +11,7 @@ import {
 } from "../controllers/authController.js";
 
 import { getDashboardStats } from "../controllers/statsController.js";
-import { protect, admin } from "../middleware/authMiddleware.js";
+import { protect, admin, roleGuard } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -22,9 +22,9 @@ router.post("/login", loginUser);
 // ---------- Protected routes ----------
 router.get("/profile", protect, getUserProfile);
 router.get("/users", protect, admin, getAllUsers);
-router.get("/drivers", protect, admin, getDrivers);
+router.get("/drivers", protect, roleGuard("admin", "staff"), getDrivers);
 
-// ✅ New admin routes for CRUD
+// ✅ Admin CRUD
 router.put("/users/:id", protect, admin, updateUser);
 router.delete("/users/:id", protect, admin, deleteUser);
 

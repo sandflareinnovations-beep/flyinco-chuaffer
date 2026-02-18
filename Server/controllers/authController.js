@@ -31,7 +31,7 @@ export const registerUser = async (req, res) => {
 
     // Default role is customer unless specified
     const userRole =
-      role && ["customer", "admin", "driver"].includes(role)
+      role && ["customer", "admin", "driver", "staff"].includes(role)
         ? role
         : "customer";
 

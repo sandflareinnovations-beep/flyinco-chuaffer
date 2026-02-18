@@ -34,7 +34,7 @@ export const getBookingById = async (req, res) => {
 
     if (!booking) return res.status(404).json({ message: "Booking not found" });
     if (
-      !req.user.isAdmin &&
+      req.user.role !== "admin" &&
       booking.user.toString() !== req.user._id.toString()
     ) {
       return res.status(403).json({ message: "Not authorized" });
@@ -53,7 +53,7 @@ export const deleteBooking = async (req, res) => {
 
     if (!booking) return res.status(404).json({ message: "Booking not found" });
     if (
-      !req.user.isAdmin &&
+      req.user.role !== "admin" &&
       booking.user.toString() !== req.user._id.toString()
     ) {
       return res.status(403).json({ message: "Not authorized" });

@@ -1,8 +1,9 @@
 // src/pages/Home.jsx
 import React from "react";
+import { motion } from "framer-motion";
 import Navbar from "../../components/Users/Navbar.jsx";
 import HeroSection from "../../components/Users/HeroSection.jsx";
-import heroImg from "../../assets/Cars/Header.png"; // ✅ adjust case/path correctly
+import heroImg from "../../assets/Cars/Header.png";
 import ServicesCarousel from "../../components/Users/Services.jsx";
 import WhyChooseUs from "../../components/Users/WhyChooseUs.jsx";
 import Fleet from "../../components/Users/fleet.jsx";
@@ -10,25 +11,58 @@ import FAQ from "../../components/Users/FAQ.jsx";
 import Contact from "../../components/Users/contact.jsx";
 import Footer from "../../components/Users/Footer.jsx";
 
+// Reusable scroll animation wrapper
+function FadeInSection({ children }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 export default function Home() {
   return (
-    <div
-      className="min-h-screen bg-cover bg-center text-white relative"
-      style={{ backgroundImage: `url(${heroImg})` }}
-    >
-      {/* optional overlay for readability */}
-      <div className="absolute inset-0 bg-black/60"></div>
+    <div className="min-h-screen bg-black text-white relative">
+      {/* Background fixed for parallax-like feel below hero */}
+      <div
+        className="fixed inset-0 z-0 opacity-20 pointer-events-none"
+        style={{
+          backgroundImage: `url(${heroImg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
+      />
 
-      <div className="relative">
+      <div className="relative z-10">
         <Navbar />
         <HeroSection />
-        <ServicesCarousel/>
-        <WhyChooseUs/>
-        <Fleet/>
-        <FAQ/>
-        <Contact/>
+
+        <FadeInSection>
+          <ServicesCarousel />
+        </FadeInSection>
+
+        <FadeInSection>
+          <WhyChooseUs />
+        </FadeInSection>
+
+        <FadeInSection>
+          <Fleet />
+        </FadeInSection>
+
+        <FadeInSection>
+          <FAQ />
+        </FadeInSection>
+
+        <FadeInSection>
+          <Contact />
+        </FadeInSection>
+
         <Footer variant="default" />
-        {/* Later you can add Services, About, Fleet sections here */}
       </div>
     </div>
   );

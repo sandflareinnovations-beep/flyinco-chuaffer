@@ -67,11 +67,11 @@ export default function AuthPage() {
         payload
       );
       localStorage.setItem("userInfo", JSON.stringify(data));
-      if (data.role === "admin") {
-        window.location.href = "/admin/dashboard"; // ✅ go directly to dashboard
-      } else {
-        window.location.href = "/";
-      }
+      const role = data.role?.toLowerCase();
+      if (role === "admin") window.location.href = "/admin/dashboard";
+      else if (role === "staff") window.location.href = "/staff";
+      else if (role === "driver") window.location.href = "/driver";
+      else window.location.href = "/";
     } catch (err) {
       alert(err.response?.data?.message || "Something went wrong. Please try again.");
     }

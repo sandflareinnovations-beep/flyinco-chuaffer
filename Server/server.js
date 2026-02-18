@@ -6,7 +6,7 @@ import connectDB from "./config/db.js";
 import bookingRoutes from "./routes/BookingRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import { notFound, errorHandler } from "./middleware/Errormiddleware.js";
-import reportRoutes from "./routes/reports.js";  // ✅ import reports
+import reportRoutes from "./routes/reports.js";
 
 dotenv.config();
 connectDB();

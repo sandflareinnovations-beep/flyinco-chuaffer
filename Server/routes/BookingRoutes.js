@@ -2,33 +2,33 @@ import express from "express";
 import {
   createBooking,
   getAllBookings,
-  getBookings as getUserBookings, // alias import
+  getBookings as getUserBookings,
   getBookingById,
   deleteBooking,
   updateBooking,
   adminDeleteBooking,
-  assignDriver, // ✅ import assign controller
+  assignDriver,
 } from "../controllers/bookingController.js";
 
-import { protect, admin } from "../middleware/authMiddleware.js";
+import { protect, admin, roleGuard } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 // ----------------- USER ROUTES -----------------
-router.route("/my").get(protect, getUserBookings); // Logged-in user’s own bookings
-router.route("/").post(protect, createBooking); // Create booking
+router.route("/my").get(protect, getUserBookings);
+router.route("/").post(protect, createBooking);
 
-// ----------------- ADMIN ROUTES -----------------
-router.route("/").get(protect, admin, getAllBookings); // View all bookings
+// ----------------- ADMIN + STAFF ROUTES -----------------
+router.route("/").get(protect, roleGuard("admin", "staff"), getAllBookings);
 router
   .route("/:id")
-  .put(protect, admin, updateBooking) // Admin: edit any booking
-  .delete(protect, admin, adminDeleteBooking); // ✅ fix: admin deletes booking
+  .put(protect, roleGuard("admin", "staff"), updateBooking)
+  .delete(protect, admin, adminDeleteBooking); // delete: admin only
 
-// ✅ Assign driver route
-router.put("/:id/assign", protect, admin, assignDriver);
+// Assign driver: admin + staff
+router.put("/:id/assign", protect, roleGuard("admin", "staff"), assignDriver);
 
 // ----------------- SHARED ROUTE -----------------
-router.route("/:id").get(protect, getBookingById); // Both admin & user
+router.route("/:id").get(protect, getBookingById);
 
 export default router;

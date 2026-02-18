@@ -50,15 +50,16 @@ export default function UserManagement() {
   useEffect(() => { fetchUsers(); }, []);
 
   // utils
-  function hashStringToColor(str) { let h=0; for (let i=0;i<str.length;i++) h=str.charCodeAt(i)+((h<<5)-h); const c=(h&0x00ffffff).toString(16).toUpperCase(); return `#${"00000".substring(0,6-c.length)+c}`; }
+  function hashStringToColor(str) { let h = 0; for (let i = 0; i < str.length; i++) h = str.charCodeAt(i) + ((h << 5) - h); const c = (h & 0x00ffffff).toString(16).toUpperCase(); return `#${"00000".substring(0, 6 - c.length) + c}`; }
   function avatarStyle(name) { return { backgroundColor: hashStringToColor(name || "user") }; }
-  function initials(first="", last="") { const a=first.trim()?first[0]:""; const b=last.trim()?last[0]:""; return (a+b).toUpperCase().slice(0,2)||"?"; }
+  function initials(first = "", last = "") { const a = first.trim() ? first[0] : ""; const b = last.trim() ? last[0] : ""; return (a + b).toUpperCase().slice(0, 2) || "?"; }
   function formatDate(iso) { try { return new Date(iso).toLocaleString(); } catch { return iso; } }
   function roleBadge(role) {
     const base = "inline-flex items-center gap-2 px-2 py-1 rounded-full text-xs font-semibold";
-    if (role === "admin") return <span className={`${base} bg-red-50 text-red-700`}><UserCheck size={14}/> Admin</span>;
-    if (role === "driver") return <span className={`${base} bg-amber-50 text-amber-700`}><User size={14}/> Driver</span>;
-    return <span className={`${base} bg-sky-50 text-sky-700`}><User size={14}/> Customer</span>;
+    if (role === "admin") return <span className={`${base} bg-red-50 text-red-700`}><UserCheck size={14} /> Admin</span>;
+    if (role === "driver") return <span className={`${base} bg-amber-50 text-amber-700`}><User size={14} /> Driver</span>;
+    if (role === "staff") return <span className={`${base} bg-purple-50 text-purple-700`}><UserCheck size={14} /> Staff</span>;
+    return <span className={`${base} bg-sky-50 text-sky-700`}><User size={14} /> Customer</span>;
   }
 
   // form validation
@@ -121,10 +122,10 @@ export default function UserManagement() {
     if (roleFilter !== "all") arr = arr.filter((u) => u.role === roleFilter);
     if (q) arr = arr.filter((u) => `${u.firstName} ${u.lastName} ${u.email} ${u.phone}`.toLowerCase().includes(q));
 
-    if (sortBy === "name_asc") arr.sort((a,b)=>`${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`));
-    else if (sortBy === "name_desc") arr.sort((a,b)=>`${b.firstName} ${b.lastName}`.localeCompare(`${a.firstName} ${a.lastName}`));
-    else if (sortBy === "created_desc") arr.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
-    else if (sortBy === "created_asc") arr.sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
+    if (sortBy === "name_asc") arr.sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`));
+    else if (sortBy === "name_desc") arr.sort((a, b) => `${b.firstName} ${b.lastName}`.localeCompare(`${a.firstName} ${a.lastName}`));
+    else if (sortBy === "created_desc") arr.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    else if (sortBy === "created_asc") arr.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     return arr;
   }, [users, query, roleFilter, sortBy]);
 
@@ -132,12 +133,12 @@ export default function UserManagement() {
   const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   React.useEffect(() => { setPage(1); }, [query, roleFilter, sortBy]);
-  React.useEffect(() => { const close=()=>setOpenActionId(null); window.addEventListener("click", close); return ()=>window.removeEventListener("click", close); }, []);
+  React.useEffect(() => { const close = () => setOpenActionId(null); window.addEventListener("click", close); return () => window.removeEventListener("click", close); }, []);
   React.useEffect(() => {
     function onDoc() { if (openSort) setOpenSort(false); }
-    function onKey(e) { if (e.key==="Escape") setOpenSort(false); }
+    function onKey(e) { if (e.key === "Escape") setOpenSort(false); }
     window.addEventListener("click", onDoc); window.addEventListener("keydown", onKey);
-    return ()=>{ window.removeEventListener("click", onDoc); window.removeEventListener("keydown", onKey); };
+    return () => { window.removeEventListener("click", onDoc); window.removeEventListener("keydown", onKey); };
   }, [openSort]);
 
   const sortOptions = [
@@ -159,7 +160,7 @@ export default function UserManagement() {
         </div>
         <div>
           <Button onClick={openCreate} className="flex items-center gap-2">
-            <Plus size={14}/> <span className="hidden sm:inline">Add User</span>
+            <Plus size={14} /> <span className="hidden sm:inline">Add User</span>
           </Button>
         </div>
       </div>
@@ -179,29 +180,30 @@ export default function UserManagement() {
                 />
               </div>
 
-              <select value={roleFilter} onChange={(e)=>setRoleFilter(e.target.value)} className="w-36 text-sm rounded-md border px-3 py-2 bg-white/5">
+              <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} className="w-36 text-sm rounded-md border px-3 py-2 bg-white/5">
                 <option value="all">All roles</option>
                 <option value="customer">Customer</option>
                 <option value="admin">Admin</option>
                 <option value="driver">Driver</option>
+                <option value="staff">Staff</option>
               </select>
 
               <div className="relative">
-                <button type="button" onClick={(e)=>{ e.stopPropagation(); setOpenSort(s=>!s); }}
+                <button type="button" onClick={(e) => { e.stopPropagation(); setOpenSort(s => !s); }}
                   className="flex items-center gap-2 border rounded-md px-3 py-2 text-sm bg-white/80 hover:shadow-sm">
                   {currentSort.icon}
                   <span className="truncate">{currentSort.label}</span>
                   <ChevronDown size={14} />
                 </button>
                 {openSort && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 border rounded-md shadow-lg z-50 animate-fade-in" onClick={(e)=>e.stopPropagation()}>
-                    {sortOptions.map((opt)=>(
-                      <button key={opt.value} onClick={()=>{ setSortBy(opt.value); setOpenSort(false); }}
+                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 border rounded-md shadow-lg z-50 animate-fade-in" onClick={(e) => e.stopPropagation()}>
+                    {sortOptions.map((opt) => (
+                      <button key={opt.value} onClick={() => { setSortBy(opt.value); setOpenSort(false); }}
                         className="w-full text-left px-3 py-2 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-slate-800"
-                        aria-pressed={sortBy===opt.value}>
+                        aria-pressed={sortBy === opt.value}>
                         <div className="w-4">{opt.icon}</div>
                         <div className="flex-1 text-sm">{opt.label}</div>
-                        {sortBy===opt.value && <Check size={14} className="text-green-600" />}
+                        {sortBy === opt.value && <Check size={14} className="text-green-600" />}
                       </button>
                     ))}
                   </div>
@@ -213,7 +215,7 @@ export default function UserManagement() {
           {/* table */}
           <div className="w-full overflow-hidden rounded-md border">
             <div className="grid items-center gap-4 px-4 py-3 text-sm font-medium text-muted-foreground bg-slate-50 dark:bg-slate-900"
-                 style={{ gridTemplateColumns: "2fr 1.6fr 1fr 1fr 72px" }}>
+              style={{ gridTemplateColumns: "2fr 1.6fr 1fr 1fr 72px" }}>
               <div>User</div>
               <div className="hidden sm:block">Email</div>
               <div className="hidden md:block">Phone</div>
@@ -223,12 +225,12 @@ export default function UserManagement() {
 
             <div className="divide-y">
               {loading && <div className="px-6 py-12 text-center text-sm text-muted-foreground">Loading users…</div>}
-              {!loading && paginated.map((u,i)=>(
-                <div key={u._id} className={`grid gap-4 px-4 py-4 items-start ${i%2===0?"bg-white":"bg-slate-50 dark:bg-slate-900"}`}
-                     style={{ gridTemplateColumns: "2fr 1.6fr 1fr 1fr 72px" }}>
+              {!loading && paginated.map((u, i) => (
+                <div key={u._id} className={`grid gap-4 px-4 py-4 items-start ${i % 2 === 0 ? "bg-white" : "bg-slate-50 dark:bg-slate-900"}`}
+                  style={{ gridTemplateColumns: "2fr 1.6fr 1fr 1fr 72px" }}>
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="w-11 h-11 rounded-full flex items-center justify-center text-white font-semibold shadow-sm" style={avatarStyle(`${u.firstName} ${u.lastName}`)}>
-                      {initials(u.firstName,u.lastName)}
+                      {initials(u.firstName, u.lastName)}
                     </div>
                     <div className="min-w-0">
                       <div className="font-medium truncate">{u.firstName} {u.lastName}</div>
@@ -241,41 +243,41 @@ export default function UserManagement() {
                   <div>{roleBadge(u.role)}</div>
 
                   <div className="flex justify-end items-center relative">
-                    <button type="button" onClick={(e)=>{ e.stopPropagation(); setOpenActionId(openActionId===u._id?null:u._id); }}
+                    <button type="button" onClick={(e) => { e.stopPropagation(); setOpenActionId(openActionId === u._id ? null : u._id); }}
                       className="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800">
-                      <Settings size={18}/>
+                      <Settings size={18} />
                     </button>
-                    {openActionId===u._id && (
+                    {openActionId === u._id && (
                       <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 border rounded-md shadow-lg z-50">
                         <div className="px-3 py-2 border-b text-xs text-muted-foreground flex items-center gap-2">
-                          <Clock size={14}/> <span>Created: {formatDate(u.createdAt)}</span>
+                          <Clock size={14} /> <span>Created: {formatDate(u.createdAt)}</span>
                         </div>
-                        <button onClick={()=>{ openEdit(u._id); setOpenActionId(null); }}
+                        <button onClick={() => { openEdit(u._id); setOpenActionId(null); }}
                           className="w-full text-left px-3 py-2 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-2">
-                          <Edit2 size={14}/> Edit
+                          <Edit2 size={14} /> Edit
                         </button>
-                        <button onClick={()=>{ promptDelete(u._id); setOpenActionId(null); }}
+                        <button onClick={() => { promptDelete(u._id); setOpenActionId(null); }}
                           className="w-full text-left px-3 py-2 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-2 text-red-600">
-                          <Trash size={14}/> Delete
+                          <Trash size={14} /> Delete
                         </button>
                       </div>
                     )}
                   </div>
                 </div>
               ))}
-              {!loading && paginated.length===0 && <div className="px-6 py-12 text-center text-sm text-muted-foreground">No users found</div>}
+              {!loading && paginated.length === 0 && <div className="px-6 py-12 text-center text-sm text-muted-foreground">No users found</div>}
             </div>
           </div>
 
           {/* pagination */}
           <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="text-sm text-muted-foreground">
-              Showing {(page-1)*pageSize+(paginated.length?1:0)}–{(page-1)*pageSize+paginated.length} of {filtered.length}
+              Showing {(page - 1) * pageSize + (paginated.length ? 1 : 0)}–{(page - 1) * pageSize + paginated.length} of {filtered.length}
             </div>
             <div className="flex items-center gap-2">
-              <Button size="sm" onClick={()=>setPage(p=>Math.max(1,p-1))} disabled={page===1}>Prev</Button>
+              <Button size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Prev</Button>
               <div className="px-3 py-1 border rounded-md text-sm">{page} / {totalPages}</div>
-              <Button size="sm" onClick={()=>setPage(p=>Math.min(totalPages,p+1))} disabled={page===totalPages}>Next</Button>
+              <Button size="sm" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>Next</Button>
             </div>
           </div>
         </CardContent>
@@ -289,41 +291,42 @@ export default function UserManagement() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>First Name</Label>
-                <Input value={form.firstName} onChange={(e)=>setForm({...form, firstName:e.target.value})}/>
+                <Input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} />
                 {formErrors.firstName && <p className="text-red-600 text-sm">{formErrors.firstName}</p>}
               </div>
               <div>
                 <Label>Last Name</Label>
-                <Input value={form.lastName} onChange={(e)=>setForm({...form, lastName:e.target.value})}/>
+                <Input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} />
                 {formErrors.lastName && <p className="text-red-600 text-sm">{formErrors.lastName}</p>}
               </div>
             </div>
             <div>
               <Label>Email</Label>
-              <Input value={form.email} onChange={(e)=>setForm({...form, email:e.target.value})}/>
+              <Input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
               {formErrors.email && <p className="text-red-600 text-sm">{formErrors.email}</p>}
             </div>
             <div>
               <Label>Phone</Label>
-              <Input value={form.phone} onChange={(e)=>setForm({...form, phone:e.target.value})}/>
+              <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
               {formErrors.phone && <p className="text-red-600 text-sm">{formErrors.phone}</p>}
             </div>
             <div>
-              <Label>{editingId?"Password (optional)":"Password"}</Label>
-              <Input type="password" value={form.password} onChange={(e)=>setForm({...form, password:e.target.value})}/>
+              <Label>{editingId ? "Password (optional)" : "Password"}</Label>
+              <Input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
               {formErrors.password && <p className="text-red-600 text-sm">{formErrors.password}</p>}
             </div>
             <div>
               <Label>Role</Label>
-              <select value={form.role} onChange={(e)=>setForm({...form, role:e.target.value})} className="w-full rounded-md border px-3 py-2">
+              <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className="w-full rounded-md border px-3 py-2">
                 <option value="customer">Customer</option>
                 <option value="admin">Admin</option>
                 <option value="driver">Driver</option>
+                <option value="staff">Staff</option>
               </select>
             </div>
             <DialogFooter>
-              <Button type="button" variant="ghost" onClick={()=>{setOpenForm(false); setEditingId(null); setForm(emptyForm);}}>Cancel</Button>
-              <Button type="submit" disabled={submitting}>{submitting?"Saving...":editingId?"Save changes":"Create user"}</Button>
+              <Button type="button" variant="ghost" onClick={() => { setOpenForm(false); setEditingId(null); setForm(emptyForm); }}>Cancel</Button>
+              <Button type="submit" disabled={submitting}>{submitting ? "Saving..." : editingId ? "Save changes" : "Create user"}</Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -335,7 +338,7 @@ export default function UserManagement() {
           <DialogHeader><DialogTitle>Delete user?</DialogTitle></DialogHeader>
           <div className="py-2 text-sm text-muted-foreground">This action is permanent.</div>
           <DialogFooter>
-            <Button onClick={()=>setOpenDelete(false)} variant="ghost">Cancel</Button>
+            <Button onClick={() => setOpenDelete(false)} variant="ghost">Cancel</Button>
             <Button onClick={handleDeleteConfirmed} variant="destructive">Delete</Button>
           </DialogFooter>
         </DialogContent>

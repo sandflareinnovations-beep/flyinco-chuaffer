@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -183,81 +184,122 @@ function MobileMenu({ userInfo, handleLogout }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full flex justify-end">
       {/* Toggle button */}
-      <div className="flex justify-end">
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label={open ? "Close menu" : "Open menu"}
-          className="h-10 w-10 text-white"
-          onClick={() => setOpen(!open)}
-        >
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </Button>
-      </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        aria-label={open ? "Close menu" : "Open menu"}
+        className="h-10 w-10 text-white hover:bg-white/10"
+        onClick={() => setOpen(!open)}
+      >
+        <AnimatePresence mode="wait">
+          {open ? (
+            <motion.div
+              key="close"
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <X className="h-6 w-6" />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="menu"
+              initial={{ rotate: 90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: -90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Menu className="h-6 w-6" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </Button>
 
-      {/* Full-width dropdown panel */}
-      {open && (
-        <div className="absolute left-0 right-0 top-full w-full bg-black/70 backdrop-blur-xl border-t border-white/20 shadow-md z-50">
-          <nav className="flex flex-col space-y-2 p-4">
-            {[...leftLinks, ...rightLinks].map((item) => (
-              <NavLink
-                key={item.label}
-                to={item.to}
-                onClick={() => setOpen(false)}
-                className={({ isActive }) =>
-                  [
-                    "block rounded-md px-3 py-3 text-base font-medium transition-colors",
-                    "hover:bg-white/10 hover:text-white",
-                    isActive ? "text-white" : "text-white/80",
-                  ].join(" ")
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
+      {/* Full-width dropdown panel with animation */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-[3.5rem] right-0 w-[90vw] max-w-sm rounded-xl bg-black/90 backdrop-blur-xl border border-white/20 shadow-2xl z-50 overflow-hidden"
+          >
+            <nav className="flex flex-col space-y-1 p-4">
+              {[...leftLinks, ...rightLinks].map((item, i) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <NavLink
+                    to={item.to}
+                    onClick={() => setOpen(false)}
+                    className={({ isActive }) =>
+                      [
+                        "block rounded-lg px-4 py-3 text-base font-medium transition-all",
+                        "hover:bg-white/10 hover:pl-6", // subtle shift on hover
+                        isActive ? "bg-white/10 text-white" : "text-white/80",
+                      ].join(" ")
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                </motion.div>
+              ))}
 
-            {/* ✅ Auth section (mobile) */}
-            {userInfo ? (
-              <div className="flex flex-col gap-2 mt-4">
-                <Button
-                  asChild
-                  className="w-full rounded-full text-base py-3 text-white"
-                  style={{ backgroundColor: "#4b0082" }}
-                  onClick={() => setOpen(false)}
-                >
-                  <Link to="/profile" className="flex items-center gap-2">
-                    <User className="h-5 w-5" />
-                    Profile
-                  </Link>
-                </Button>
-                <Button
-                  onClick={() => {
-                    handleLogout();
-                    setOpen(false);
-                  }}
-                  className="w-full rounded-full text-base py-3 bg-red-600 text-white flex items-center gap-2 hover:bg-red-700"
-                >
-                  <LogOut className="h-5 w-5" />
-                  Logout
-                </Button>
-              </div>
-            ) : (
-              <Button
-                asChild
-                className="mt-4 w-full rounded-full text-base py-3 text-white"
-                style={{ backgroundColor: "#4b0082" }}
-                onClick={() => setOpen(false)}
+              {/* ✅ Auth section (mobile) */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="pt-4 mt-2 border-t border-white/10"
               >
-                <Link to="/login" aria-label="Login">
-                  Login
-                </Link>
-              </Button>
-            )}
-          </nav>
-        </div>
-      )}
+                {userInfo ? (
+                  <div className="flex flex-col gap-3">
+                    <Button
+                      asChild
+                      className="w-full rounded-full text-base py-6 text-white shadow-lg"
+                      style={{ backgroundColor: "#4b0082" }}
+                      onClick={() => setOpen(false)}
+                    >
+                      <Link to="/profile" className="flex items-center justify-center gap-2">
+                        <User className="h-5 w-5" />
+                        Profile
+                      </Link>
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        handleLogout();
+                        setOpen(false);
+                      }}
+                      className="w-full rounded-full text-base py-6 bg-red-600/80 text-white flex items-center justify-center gap-2 hover:bg-red-700"
+                    >
+                      <LogOut className="h-5 w-5" />
+                      Logout
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    asChild
+                    className="w-full rounded-full text-base py-6 text-white shadow-lg"
+                    style={{ backgroundColor: "#4b0082" }}
+                    onClick={() => setOpen(false)}
+                  >
+                    <Link to="/login" aria-label="Login">
+                      Login
+                    </Link>
+                  </Button>
+                )}
+              </motion.div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

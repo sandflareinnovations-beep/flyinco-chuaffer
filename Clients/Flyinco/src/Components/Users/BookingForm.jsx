@@ -13,6 +13,7 @@ import TripDetails from "./Booking/TripDetails";
 import VehicleSection from "./Booking/VehicleSection";
 import Enhancements from "./Booking/Enhancement";
 import Review from "./Booking/Review";
+import BookingSuccess from "./BookingSuccess"; // ✅ Import Success Component
 
 export default function BookingForm() {
   const refs = {
@@ -60,6 +61,7 @@ export default function BookingForm() {
   const [errors, setErrors] = useState({});
   const [showReview, setShowReview] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false); // ✅ Success State
 
   function update(field, value) {
     setData((d) => {
@@ -178,10 +180,9 @@ export default function BookingForm() {
     try {
       const res = await api.post("/bookings", data);
 
-      alert("✅ Booking submitted successfully!");
+      // ✅ Instead of alert, show success screen
       console.log("Saved booking:", res.data);
-
-      resetAll();
+      setSuccess(true);
       setShowReview(false);
     } catch (err) {
       console.error(err);
@@ -194,6 +195,11 @@ export default function BookingForm() {
   const selectedCountry =
     COUNTRY_CODES.find((c) => c.value === data.countryCode) || COUNTRY_CODES[0];
   const selectedVehicleObj = VEHICLES.find((v) => v.value === data.vehicle);
+
+  // ✅ Render Success Screen if successful
+  if (success) {
+    return <BookingSuccess onReset={() => { setSuccess(false); resetAll(); }} />;
+  }
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 sm:p-8">
