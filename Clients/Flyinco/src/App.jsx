@@ -14,7 +14,7 @@ import Contact from "./Pages/User/Contact.jsx";
 import NotAuthorized from "./Pages/User/NotAuthorised.jsx";
 
 // Admin Pages
-import AdminLayout from "./components/admin/AdminLayout.jsx";
+import AdminLayout from "./Components/admin/AdminLayout.jsx";
 import Dashboard from "./Pages/admin/dashboard.jsx";
 import Users from "./Pages/admin/user.jsx";
 import Bookings from "./Pages/admin/Booking.jsx";
