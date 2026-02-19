@@ -1,7 +1,7 @@
 import React from "react";
-import Navbar from "../../components/Driver/Navbar";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import Navbar from "../../Components/Driver/Navbar";
+import { Card, CardContent } from "@/Components/ui/card";
+import { Button } from "@/Components/ui/button";
 import { Phone, Mail, Play, Map } from "lucide-react";
 
 export default function Dashboard() {

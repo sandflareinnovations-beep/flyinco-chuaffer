@@ -1,11 +1,11 @@
 // src/pages/UserManagement.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import api from "../../lib/api"; // axios wrapper
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/Components/ui/card";
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/Components/ui/dialog";
+import { Label } from "@/Components/ui/label";
 import {
   Trash, Edit2, Plus, Search, UserCheck, User,
   Clock, Settings, Check, ChevronDown, SortAsc, SortDesc,

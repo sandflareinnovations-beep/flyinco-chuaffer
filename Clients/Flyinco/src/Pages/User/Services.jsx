@@ -3,8 +3,8 @@ import React, { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
-import Navbar from "../../components/Users/Navbar";
-import Footer from "../../components/Users/Footer";
+import Navbar from "../../Components/Users/Navbar";
+import Footer from "../../Components/Users/Footer";
 
 import airportService from "../../assets/Cars/Airport service.jpg";
 import HotelTransfer from "../../assets/Cars/Hotel Transfer service.jpg";
@@ -100,9 +100,8 @@ export default function ServicesJourney() {
               <motion.div
                 ref={ref}
                 key={s.id}
-                className={`relative flex flex-col md:flex-row items-center gap-10 ${
-                  i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                }`}
+                className={`relative flex flex-col md:flex-row items-center gap-10 ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+                  }`}
                 initial="hidden"
                 animate={controls}
                 variants={{

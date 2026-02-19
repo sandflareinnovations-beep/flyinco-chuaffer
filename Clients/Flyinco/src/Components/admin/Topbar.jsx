@@ -1,10 +1,10 @@
-// src/components/admin/Topbar.jsx
+// src/Components/admin/Topbar.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/Flyinco.png";
 import { Sun, Moon, LogOut, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
-import NotificationBell from "../../components/admin/Notification";
+import NotificationBell from "../../Components/admin/Notification";
 
 export default function Topbar() {
   const navigate = useNavigate();

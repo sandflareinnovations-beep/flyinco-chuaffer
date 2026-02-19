@@ -8,8 +8,8 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuLabel,
-} from "@/components/ui/dropdown-menu";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@/Components/ui/dropdown-menu";
+import { ScrollArea } from "@/Components/ui/scroll-area";
 
 export default function NotificationBell({
   items = [],
@@ -81,8 +81,8 @@ export default function NotificationBell({
                           n.type === "warning"
                             ? "text-amber-600"
                             : n.type === "success"
-                            ? "text-green-600"
-                            : "text-gray-600"
+                              ? "text-green-600"
+                              : "text-gray-600"
                         )}
                       />
                     </div>

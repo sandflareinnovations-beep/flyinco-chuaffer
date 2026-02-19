@@ -1,7 +1,7 @@
 // src/pages/ProfilePage.jsx
 import React, { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/Components/ui/card";
+import { Button } from "@/Components/ui/button";
 import {
   User,
   Mail,
@@ -17,10 +17,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
+} from "@/Components/ui/dialog";
 import api from "../../lib/api";
-import Footer from "../../components/Users/Footer";
-import BookingList from "../../components/Users/BookingProfile"; // ✅ Import BookingList
+import Footer from "../../Components/Users/Footer";
+import BookingList from "../../Components/Users/BookingProfile"; // ✅ Import BookingList
 import { motion } from "framer-motion";
 
 export default function ProfilePage() {

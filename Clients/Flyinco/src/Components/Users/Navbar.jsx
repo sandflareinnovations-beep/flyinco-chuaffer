@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/Components/ui/dropdown-menu";
 
 import logo from "../../assets/Flyinco White Logo.png";
 

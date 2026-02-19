@@ -1,4 +1,4 @@
-// src/components/HeroSection.jsx
+// src/Components/HeroSection.jsx
 import React from "react";
 import { motion } from "framer-motion";
 import heroImg from "../../assets/Cars/Header.png";

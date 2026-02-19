@@ -1,9 +1,9 @@
 import React from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Label } from "@/Components/ui/label";
+import { Input } from "@/Components/ui/input";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select";
+} from "@/Components/ui/select";
 import { Phone, Mail, User } from "lucide-react";
 
 export default function PersonalDetails({

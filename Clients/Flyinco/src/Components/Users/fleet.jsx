@@ -1,12 +1,12 @@
-// src/components/Users/fleet.jsx
+// src/Components/Users/fleet.jsx
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/Components/ui/button";
+import { Separator } from "@/Components/ui/separator";
 import { Users, Luggage, ChevronLeft, ChevronRight } from "lucide-react";
 import yukon from "../../assets/Cars/yukon.jpeg"
-import  tahoe from "../../assets/Cars/Cheverolet tahoe.jpg"
-import  Taurus from "../../assets/Cars/Ford Taurus.jpg"
+import tahoe from "../../assets/Cars/Cheverolet tahoe.jpg"
+import Taurus from "../../assets/Cars/Ford Taurus.jpg"
 import Territory from "../../assets/Cars/Ford Territory.jpg"
 import bus from "../../assets/Cars/Mercedees bus.jpg"
 import S_class from "../../assets/Cars/Mercedees S class front.jpg"
@@ -220,9 +220,8 @@ export default function Fleet() {
                   key={v.id}
                   ref={(el) => (thumbRefs.current[idx] = el)}
                   onClick={() => setSelectedIndex(idx)}
-                  className={`group relative shrink-0 w-[200px] md:w-[240px] snap-start rounded-xl border transition ${
-                    active ? "border-white/70 ring-1 ring-white/50" : "border-slate-800 hover:border-slate-600"
-                  }`}
+                  className={`group relative shrink-0 w-[200px] md:w-[240px] snap-start rounded-xl border transition ${active ? "border-white/70 ring-1 ring-white/50" : "border-slate-800 hover:border-slate-600"
+                    }`}
                   aria-label={`Select ${v.name}`}
                 >
                   <div className="aspect-[16/10] w-full overflow-hidden rounded-xl">

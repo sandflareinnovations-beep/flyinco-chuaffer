@@ -1,8 +1,8 @@
 // src/pages/Dashboard.jsx
 import React, { useEffect, useState } from "react";
 import api from "../../lib/api";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import { Button } from "@/Components/ui/button";
 import {
   CalendarCheck,
   Users,

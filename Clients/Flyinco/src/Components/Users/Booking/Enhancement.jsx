@@ -1,7 +1,7 @@
 import React from "react";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/Components/ui/label";
+import { Textarea } from "@/Components/ui/textarea";
+import { Checkbox } from "@/Components/ui/checkbox";
 
 export default function Enhancements({
   sectionRef,

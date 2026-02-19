@@ -1,11 +1,11 @@
 // src/pages/DriverManagement.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import api from "../../lib/api"; // axios wrapper
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/Components/ui/card";
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/Components/ui/dialog";
+import { Label } from "@/Components/ui/label";
 import {
   Trash, Edit2, Plus, Search, Phone, Mail, Car,
   Clock, Settings, Check, ChevronDown, SortAsc, SortDesc,
@@ -58,9 +58,9 @@ export default function DriverManagement() {
   useEffect(() => { fetchDrivers(); }, []);
 
   // utils
-  function hashStringToColor(str) { let h=0; for (let i=0;i<str.length;i++) h=str.charCodeAt(i)+((h<<5)-h); const c=(h&0x00ffffff).toString(16).toUpperCase(); return `#${"00000".substring(0,6-c.length)+c}`; }
+  function hashStringToColor(str) { let h = 0; for (let i = 0; i < str.length; i++) h = str.charCodeAt(i) + ((h << 5) - h); const c = (h & 0x00ffffff).toString(16).toUpperCase(); return `#${"00000".substring(0, 6 - c.length) + c}`; }
   function avatarStyle(name) { return { backgroundColor: hashStringToColor(name || "driver") }; }
-  function initials(first="", last="") { const a=first.trim()?first[0]:""; const b=last.trim()?last[0]:""; return (a+b).toUpperCase().slice(0,2)||"?"; }
+  function initials(first = "", last = "") { const a = first.trim() ? first[0] : ""; const b = last.trim() ? last[0] : ""; return (a + b).toUpperCase().slice(0, 2) || "?"; }
   function formatDate(iso) { try { return new Date(iso).toLocaleString(); } catch { return iso; } }
 
   // form validation
@@ -182,7 +182,7 @@ export default function DriverManagement() {
         </div>
         <div>
           <Button onClick={openCreate} className="flex items-center gap-2">
-            <Plus size={14}/> <span className="hidden sm:inline">Add Driver</span>
+            <Plus size={14} /> <span className="hidden sm:inline">Add Driver</span>
           </Button>
         </div>
       </div>
@@ -229,7 +229,7 @@ export default function DriverManagement() {
           {/* table */}
           <div className="w-full overflow-hidden rounded-md border">
             <div className="grid items-center gap-4 px-4 py-3 text-sm font-medium text-muted-foreground bg-slate-50 dark:bg-slate-900"
-                 style={{ gridTemplateColumns: "2fr 1.6fr 1fr 1.5fr 140px" }}>
+              style={{ gridTemplateColumns: "2fr 1.6fr 1fr 1.5fr 140px" }}>
               <div>Driver</div>
               <div className="hidden sm:block">Email</div>
               <div className="hidden md:block">Phone</div>
@@ -241,7 +241,7 @@ export default function DriverManagement() {
               {loading && <div className="px-6 py-12 text-center text-sm text-muted-foreground">Loading drivers…</div>}
               {!loading && paginated.map((d, i) => (
                 <div key={d._id} className={`grid gap-4 px-4 py-4 items-start ${i % 2 === 0 ? "bg-white" : "bg-slate-50 dark:bg-slate-900"}`}
-                     style={{ gridTemplateColumns: "2fr 1.6fr 1fr 1.5fr 140px" }}>
+                  style={{ gridTemplateColumns: "2fr 1.6fr 1fr 1.5fr 140px" }}>
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="w-11 h-11 rounded-full flex items-center justify-center text-white font-semibold shadow-sm" style={avatarStyle(`${d.firstName} ${d.lastName}`)}>
                       {initials(d.firstName, d.lastName)}
@@ -259,10 +259,10 @@ export default function DriverManagement() {
                   <div className="flex justify-end items-center relative gap-2">
                     {/* contact buttons */}
                     <Button size="sm" variant="outline" asChild>
-                      <a href={`tel:${d.phone}`}><Phone size={14}/></a>
+                      <a href={`tel:${d.phone}`}><Phone size={14} /></a>
                     </Button>
                     <Button size="sm" variant="outline" asChild>
-                      <a href={`mailto:${d.email}`}><Mail size={14}/></a>
+                      <a href={`mailto:${d.email}`}><Mail size={14} /></a>
                     </Button>
 
                     <button type="button" onClick={(e) => { e.stopPropagation(); setOpenActionId(openActionId === d._id ? null : d._id); }}

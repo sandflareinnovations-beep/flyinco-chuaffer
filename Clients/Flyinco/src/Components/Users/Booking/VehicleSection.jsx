@@ -1,8 +1,8 @@
 import React from "react";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/Components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select";
+} from "@/Components/ui/select";
 import { CheckCircle2 } from "lucide-react";
 
 function VehicleCard({ item, selected, selectedModel, onSelect, onSelectModel }) {

@@ -1,16 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import { Plus, Download } from "lucide-react";
 
-import BookingTable from "../../components/admin/booking/BookingTable";
-import BookingDialogs from "../../components/admin/booking/BookingDialogs";
+import BookingTable from "../../Components/admin/booking/BookingTable";
+import BookingDialogs from "../../Components/admin/booking/BookingDialogs";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
+} from "@/Components/ui/dialog";
 import api from "../../lib/api";
 
 export default function BookingManagement() {
@@ -80,15 +80,15 @@ export default function BookingManagement() {
       amount: b.amount || null,
       assignedDriver: b.assignedDriver
         ? {
-            id: b.assignedDriver._id,
-            name: b.assignedDriver.name,
-            phone: b.assignedDriver.phone,
-            email: b.assignedDriver.email,
-            licenseNumber: b.assignedDriver.licenseNumber,
-            vehicleName: b.assignedDriver.vehicleName,
-            vehicleModel: b.assignedDriver.vehicleModel,
-            vehicleType: b.assignedDriver.vehicleType,
-          }
+          id: b.assignedDriver._id,
+          name: b.assignedDriver.name,
+          phone: b.assignedDriver.phone,
+          email: b.assignedDriver.email,
+          licenseNumber: b.assignedDriver.licenseNumber,
+          vehicleName: b.assignedDriver.vehicleName,
+          vehicleModel: b.assignedDriver.vehicleModel,
+          vehicleType: b.assignedDriver.vehicleType,
+        }
         : null,
       createdAt: b.createdAt,
       updatedAt: b.updatedAt,

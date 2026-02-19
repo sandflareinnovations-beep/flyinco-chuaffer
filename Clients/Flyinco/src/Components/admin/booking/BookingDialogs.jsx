@@ -1,11 +1,11 @@
-// src/components/admin/booking/BookingDialogs.jsx
+// src/Components/admin/booking/BookingDialogs.jsx
 import React, { useMemo } from "react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@/Components/ui/dialog";
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { Label } from "@/Components/ui/label";
 
 export default function BookingDialogs({
   openForm, setOpenForm,

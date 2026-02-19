@@ -2,12 +2,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Users, Luggage } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import { Link } from "react-router-dom";
 
 // Navbar & Footer
-import Navbar from "../../components/Users/Navbar";
-import Footer from "../../components/Users/Footer";
+import Navbar from "../../Components/Users/Navbar";
+import Footer from "../../Components/Users/Footer";
 
 // Car Images
 import yukon from "../../assets/Cars/yukon.jpeg";
@@ -148,9 +148,8 @@ export default function Fleet() {
         {vehicles.map((car, index) => (
           <motion.div
             key={car.id}
-            className={`relative flex flex-col md:flex-row items-center gap-10 rounded-2xl p-6 ${
-              index % 2 !== 0 ? "md:flex-row-reverse" : ""
-            }`}
+            className={`relative flex flex-col md:flex-row items-center gap-10 rounded-2xl p-6 ${index % 2 !== 0 ? "md:flex-row-reverse" : ""
+              }`}
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

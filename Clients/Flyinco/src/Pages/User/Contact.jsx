@@ -1,7 +1,7 @@
 // src/pages/Contact.jsx
 import React from "react";
-import Navbar from "../../components/Users/Navbar";
-import Footer from "../../components/Users/Footer";
+import Navbar from "../../Components/Users/Navbar";
+import Footer from "../../Components/Users/Footer";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 

@@ -2,8 +2,8 @@
 import React, { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import Navbar from "../../components/Users/Navbar";
-import Footer from "../../components/Users/Footer"; // ✅ added footer
+import Navbar from "../../Components/Users/Navbar";
+import Footer from "../../Components/Users/Footer"; // ✅ added footer
 import {
   Crown,
   ShieldCheck,

@@ -1,8 +1,8 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/Components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/Components/ui/sheet";
 import { Menu, Bell, User } from "lucide-react";
-import { Switch } from "@/components/ui/switch";
+import { Switch } from "@/Components/ui/switch";
 
 export default function Navbar() {
   return (

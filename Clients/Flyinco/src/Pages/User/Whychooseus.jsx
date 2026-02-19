@@ -10,8 +10,8 @@ import {
 } from "lucide-react";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import Navbar from "../../components/Users/Navbar";
-import Footer from "../../components/Users/Footer";
+import Navbar from "../../Components/Users/Navbar";
+import Footer from "../../Components/Users/Footer";
 
 const ITEMS = [
   {
@@ -78,7 +78,7 @@ export default function WhyChooseUsPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 1 }}
         >
-          Excellence isn’t an upgrade — it’s the baseline.  
+          Excellence isn’t an upgrade — it’s the baseline.
           Here’s why Flyinco stands apart in redefining journeys.
         </motion.p>
       </section>
@@ -121,9 +121,8 @@ export default function WhyChooseUsPage() {
               <motion.div
                 ref={ref}
                 key={i}
-                className={`relative flex flex-col md:flex-row items-center gap-10 ${
-                  i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                }`}
+                className={`relative flex flex-col md:flex-row items-center gap-10 ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+                  }`}
                 initial="hidden"
                 animate={controls}
                 variants={{

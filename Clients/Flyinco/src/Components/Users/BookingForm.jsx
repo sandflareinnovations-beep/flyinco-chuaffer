@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from "@/Components/ui/card";
+import { Button } from "@/Components/ui/button";
+import { Separator } from "@/Components/ui/separator";
 import { ClipboardList } from "lucide-react";
 
 import { COUNTRY_CODES, SERVICES, VEHICLES, ADDONS } from "./Booking/Constants";

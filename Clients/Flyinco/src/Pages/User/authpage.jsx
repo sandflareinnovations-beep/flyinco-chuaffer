@@ -1,8 +1,8 @@
 // src/pages/AuthPage.jsx
 import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card } from "@/Components/ui/card";
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
 import { Mail, Lock, User, Phone } from "lucide-react"; // ✅ icons
 import api from "../../lib/api";
 
@@ -13,7 +13,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/Components/ui/select";
 
 // ✅ Framer Motion
 import { motion } from "framer-motion";

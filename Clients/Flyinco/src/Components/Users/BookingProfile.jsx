@@ -1,7 +1,7 @@
-// src/components/Users/BookingList.jsx
+// src/Components/Users/BookingList.jsx
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
+import { Card } from "@/Components/ui/card";
 import { MapPin, Calendar, Clock } from "lucide-react";
 import {
   Dialog,
@@ -10,8 +10,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from "@/Components/ui/dialog";
+import { Button } from "@/Components/ui/button";
 
 // Mapping for service labels
 const SERVICE_LABELS = {
@@ -90,13 +90,12 @@ export default function BookingList({ bookings }) {
                       )}
                     </div>
                     <span
-                      className={`px-3 py-1 text-xs font-medium rounded-full ${
-                        booking.status === "completed"
+                      className={`px-3 py-1 text-xs font-medium rounded-full ${booking.status === "completed"
                           ? "bg-green-500/20 text-green-300"
                           : booking.status === "pending"
-                          ? "bg-yellow-500/20 text-yellow-300"
-                          : "bg-gray-500/20 text-gray-300"
-                      }`}
+                            ? "bg-yellow-500/20 text-yellow-300"
+                            : "bg-gray-500/20 text-gray-300"
+                        }`}
                     >
                       {booking.status || "New"}
                     </span>

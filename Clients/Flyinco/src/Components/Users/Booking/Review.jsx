@@ -1,6 +1,6 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/Components/ui/button";
+import { Separator } from "@/Components/ui/separator";
 import { Pencil, Check } from "lucide-react";
 
 export default function Review({
@@ -182,9 +182,9 @@ export default function Review({
               <span className="text-white">
                 {data.addons.length
                   ? data.addons
-                      .map((v) => ADDONS.find((a) => a.value === v)?.label)
-                      .filter(Boolean)
-                      .join(", ")
+                    .map((v) => ADDONS.find((a) => a.value === v)?.label)
+                    .filter(Boolean)
+                    .join(", ")
                   : "—"}
               </span>
             </li>

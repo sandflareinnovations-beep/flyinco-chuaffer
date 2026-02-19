@@ -1,8 +1,8 @@
-// src/components/admin/booking/BookingTable.jsx
+// src/Components/admin/booking/BookingTable.jsx
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/Components/ui/card";
+import { Input } from "@/Components/ui/input";
+import { Button } from "@/Components/ui/button";
 import { Search } from "lucide-react";
 
 import BookingRow from "./BookingRow";

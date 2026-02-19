@@ -1,17 +1,17 @@
 import React from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Label } from "@/Components/ui/label";
+import { Input } from "@/Components/ui/input";
+import { Button } from "@/Components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar"; // OriginUI-styled calendar
+} from "@/Components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
+import { Popover, PopoverTrigger, PopoverContent } from "@/Components/ui/popover";
+import { Calendar } from "@/Components/ui/calendar"; // OriginUI-styled calendar
 import {
   Plane,
   MapPin,
@@ -69,10 +69,10 @@ export default function TripDetails({
     const d = fromISODate(s);
     return d
       ? d.toLocaleDateString(undefined, {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        })
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
       : "Pick a date";
   };
 
@@ -87,35 +87,35 @@ export default function TripDetails({
     []
   );
   // Dark theme styles for OriginUI/DayPicker (white text, subtle hovers)
-const calendarClassNames = {
-  months: "flex flex-col sm:flex-row gap-4 p-3",
-  month: "space-y-3",
-  caption: "flex justify-center items-center relative text-white",
-  caption_label: "text-sm font-medium text-white",
-  nav: "space-x-1 flex items-center",
-  nav_button:
-    "h-7 w-7 rounded-md hover:bg-white/10 text-white disabled:opacity-40 disabled:hover:bg-transparent",
-  nav_button_previous: "absolute left-1",
-  nav_button_next: "absolute right-1",
-  table: "w-full border-collapse",
-  head_row: "flex",
-  head_cell: "w-9 text-[0.75rem] font-normal text-white/60",
-  row: "flex w-full mt-1.5",
-  cell:
-    "h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
-  day:
-    "h-9 w-9 rounded-md text-white hover:bg-white/10 focus-visible:outline-none aria-selected:opacity-100",
-  day_selected:
-    "bg-white text-black hover:bg-white focus:bg-white",
-  day_today:
-    "ring-1 ring-white/40",
-  day_outside:
-    "text-white/30 aria-selected:bg-white/10 aria-selected:text-white",
-  day_disabled: "text-white/30",
-  day_range_middle: "bg-white/10",
-  day_range_start: "bg-white text-black",
-  day_range_end: "bg-white text-black",
-};
+  const calendarClassNames = {
+    months: "flex flex-col sm:flex-row gap-4 p-3",
+    month: "space-y-3",
+    caption: "flex justify-center items-center relative text-white",
+    caption_label: "text-sm font-medium text-white",
+    nav: "space-x-1 flex items-center",
+    nav_button:
+      "h-7 w-7 rounded-md hover:bg-white/10 text-white disabled:opacity-40 disabled:hover:bg-transparent",
+    nav_button_previous: "absolute left-1",
+    nav_button_next: "absolute right-1",
+    table: "w-full border-collapse",
+    head_row: "flex",
+    head_cell: "w-9 text-[0.75rem] font-normal text-white/60",
+    row: "flex w-full mt-1.5",
+    cell:
+      "h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
+    day:
+      "h-9 w-9 rounded-md text-white hover:bg-white/10 focus-visible:outline-none aria-selected:opacity-100",
+    day_selected:
+      "bg-white text-black hover:bg-white focus:bg-white",
+    day_today:
+      "ring-1 ring-white/40",
+    day_outside:
+      "text-white/30 aria-selected:bg-white/10 aria-selected:text-white",
+    day_disabled: "text-white/30",
+    day_range_middle: "bg-white/10",
+    day_range_start: "bg-white text-black",
+    day_range_end: "bg-white text-black",
+  };
 
 
   // Passengers stepper
@@ -334,65 +334,65 @@ const calendarClassNames = {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
         {/* Pickup Date */}
         <div>
-  <Label className="text-white/90">Date of Pickup</Label>
-  <Popover>
-    <PopoverTrigger asChild>
-      <Button
-        type="button"
-        variant="outline"
-        className="w-full justify-between bg-white/10 border-white/20 text-white hover:bg-white/10"
-      >
-        <span className="truncate text-left">
-          {prettyDate(data.pickupDate)}
-        </span>
-        <CalendarIcon className="w-4 h-4 shrink-0 opacity-80" />
-      </Button>
-    </PopoverTrigger>
-    <PopoverContent
-      className="p-0 bg-gray-900 border-white/20 text-white"
-      align="start"
-    >
-      <Calendar
-        mode="single"
-        selected={fromISODate(data.pickupDate)}
-        onSelect={(d) => update("pickupDate", toISODate(d))}
-        initialFocus
-        className="bg-transparent"
-        classNames={{
-          months: "flex flex-col sm:flex-row gap-4 p-3",
-          month: "space-y-3",
-          caption: "flex justify-center items-center relative text-white",
-          caption_label: "text-sm font-medium text-white",
-          nav: "space-x-1 flex items-center",
-          nav_button:
-            "h-7 w-7 rounded-md hover:bg-white/10 text-white disabled:opacity-40 disabled:hover:bg-transparent",
-          nav_button_previous: "absolute left-1",
-          nav_button_next: "absolute right-1",
-          table: "w-full border-collapse",
-          head_row: "flex",
-          head_cell: "w-9 text-[0.75rem] font-normal text-white/60",
-          row: "flex w-full mt-1.5",
-          cell:
-            "h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
-          day:
-            "h-9 w-9 rounded-md text-white hover:bg-white/10 focus-visible:outline-none aria-selected:opacity-100",
-          day_selected:
-            "bg-white text-black hover:bg-white focus:bg-white",
-          day_today: "ring-1 ring-white/40",
-          day_outside:
-            "text-white/30 aria-selected:bg-white/10 aria-selected:text-white",
-          day_disabled: "text-white/30",
-          day_range_middle: "bg-white/10",
-          day_range_start: "bg-white text-black",
-          day_range_end: "bg-white text-black",
-        }}
-      />
-    </PopoverContent>
-  </Popover>
-  {errors.pickupDate && (
-    <p className="text-sm text-red-400 mt-1">{errors.pickupDate}</p>
-  )}
-</div>
+          <Label className="text-white/90">Date of Pickup</Label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full justify-between bg-white/10 border-white/20 text-white hover:bg-white/10"
+              >
+                <span className="truncate text-left">
+                  {prettyDate(data.pickupDate)}
+                </span>
+                <CalendarIcon className="w-4 h-4 shrink-0 opacity-80" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              className="p-0 bg-gray-900 border-white/20 text-white"
+              align="start"
+            >
+              <Calendar
+                mode="single"
+                selected={fromISODate(data.pickupDate)}
+                onSelect={(d) => update("pickupDate", toISODate(d))}
+                initialFocus
+                className="bg-transparent"
+                classNames={{
+                  months: "flex flex-col sm:flex-row gap-4 p-3",
+                  month: "space-y-3",
+                  caption: "flex justify-center items-center relative text-white",
+                  caption_label: "text-sm font-medium text-white",
+                  nav: "space-x-1 flex items-center",
+                  nav_button:
+                    "h-7 w-7 rounded-md hover:bg-white/10 text-white disabled:opacity-40 disabled:hover:bg-transparent",
+                  nav_button_previous: "absolute left-1",
+                  nav_button_next: "absolute right-1",
+                  table: "w-full border-collapse",
+                  head_row: "flex",
+                  head_cell: "w-9 text-[0.75rem] font-normal text-white/60",
+                  row: "flex w-full mt-1.5",
+                  cell:
+                    "h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
+                  day:
+                    "h-9 w-9 rounded-md text-white hover:bg-white/10 focus-visible:outline-none aria-selected:opacity-100",
+                  day_selected:
+                    "bg-white text-black hover:bg-white focus:bg-white",
+                  day_today: "ring-1 ring-white/40",
+                  day_outside:
+                    "text-white/30 aria-selected:bg-white/10 aria-selected:text-white",
+                  day_disabled: "text-white/30",
+                  day_range_middle: "bg-white/10",
+                  day_range_start: "bg-white text-black",
+                  day_range_end: "bg-white text-black",
+                }}
+              />
+            </PopoverContent>
+          </Popover>
+          {errors.pickupDate && (
+            <p className="text-sm text-red-400 mt-1">{errors.pickupDate}</p>
+          )}
+        </div>
 
 
         {/* Pickup Time */}
@@ -421,9 +421,8 @@ const calendarClassNames = {
                     key={t}
                     type="button"
                     onClick={() => update("pickupTime", t)}
-                    className={`w-full text-left px-3 py-2 rounded-md hover:bg-white/10 ${
-                      data.pickupTime === t ? "bg-white/10" : ""
-                    }`}
+                    className={`w-full text-left px-3 py-2 rounded-md hover:bg-white/10 ${data.pickupTime === t ? "bg-white/10" : ""
+                      }`}
                   >
                     {t}
                   </button>

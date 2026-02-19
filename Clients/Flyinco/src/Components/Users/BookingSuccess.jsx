@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, Home, CalendarCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 
 export default function BookingSuccess({ onReset }) {
     const navigate = useNavigate();

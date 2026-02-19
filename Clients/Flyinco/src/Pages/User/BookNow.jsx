@@ -1,7 +1,7 @@
 import React from "react";
-import BookingForm from "../../components/Users/BookingForm"; 
-import Navbar from "../../components/Users/Navbar";
-import Footer from "../../components/Users/Footer"; // ✅ import footer
+import BookingForm from "../../Components/Users/BookingForm";
+import Navbar from "../../Components/Users/Navbar";
+import Footer from "../../Components/Users/Footer"; // ✅ import footer
 
 export default function BookNow() {
   return (
