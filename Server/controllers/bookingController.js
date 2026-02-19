@@ -136,7 +136,6 @@ export const assignDriver = async (req, res) => {
   }
 };
 
-// ✅ Issue Invoice (just updates flag and returns updated booking)
 // ✅ Issue Invoice + Generate PDF
 export const issueInvoice = async (req, res) => {
   try {
@@ -145,14 +144,19 @@ export const issueInvoice = async (req, res) => {
     if (!booking) return res.status(404).json({ message: "Booking not found" });
 
     // Mark as invoice issued
-    booking.invoiceIssued = true;
-    await booking.save();
+    if (!booking.invoiceIssued) {
+      booking.invoiceIssued = true;
+      await booking.save();
+    }
+
+    console.log("Generating invoice for:", booking._id);
 
     // Create PDF
     const doc = new PDFDocument({ margin: 50 });
 
     // Set headers
-    const invoiceId = `INV-${new Date().getFullYear()}-${booking._id.toString().slice(-4).toUpperCase()}`;
+    const idSuffix = booking._id.toString().slice(-4).toUpperCase();
+    const invoiceId = `INV-${new Date().getFullYear()}-${idSuffix}`;
     const filename = `${invoiceId}.pdf`;
 
     res.setHeader("Content-disposition", `attachment; filename="${filename}"`);
@@ -164,9 +168,17 @@ export const issueInvoice = async (req, res) => {
 
     // Logo Path
     const logoPath = path.join(__dirname, "../assets/Flyinco.png");
+    console.log("Logo Path resolved to:", logoPath);
 
     if (fs.existsSync(logoPath)) {
-      doc.image(logoPath, 50, 45, { width: 150 });
+      try {
+        doc.image(logoPath, 50, 45, { width: 150 });
+      } catch (imgErr) {
+        console.error("Error loading logo image:", imgErr);
+        // Continue without logo
+      }
+    } else {
+      console.warn("Logo file not found at:", logoPath);
     }
 
     // Company Info (Right Aligned)
@@ -192,12 +204,13 @@ export const issueInvoice = async (req, res) => {
       .fillColor("#333333")
       .text("TAX INVOICE", 50, 160);
 
+    const invoiceDate = new Date().toLocaleDateString();
     doc
       .fontSize(10)
       .fillColor("#666666")
       .text(`Invoice ID: ${invoiceId}`, 50, 185)
-      .text(`Date: ${new Date().toLocaleDateString()}`, 50, 200)
-      .text(`Status: Paid`, 50, 215); // Assuming paid if invoiced, or use booking.status
+      .text(`Date: ${invoiceDate}`, 50, 200)
+      .text(`Status: Paid`, 50, 215);
 
     // Bill To (Left)
     doc
@@ -205,80 +218,99 @@ export const issueInvoice = async (req, res) => {
       .fillColor("#333333")
       .text("Bill To:", 300, 160, { bold: true });
 
+    // Safe Navigation for Customer Info
+    const fullName = `${booking.firstName || ""} ${booking.lastName || ""}`.trim() || "Valued Customer";
+    const email = booking.email || "";
+    const phone = booking.contactNumber || booking.phone || "";
+
     doc
       .fontSize(10)
       .fillColor("#666666")
-      .text(`${booking.firstName} ${booking.lastName}`, 300, 170)
-      .text(booking.email, 300, 185)
-      .text(booking.contactNumber || booking.phone, 300, 200);
+      .text(fullName, 300, 170)
+      .text(email, 300, 185)
+      .text(phone, 300, 200);
 
     // Trip Details Table Header
     const tableTop = 250;
     doc
       .fontSize(10)
+      .font("Helvetica-Bold")
       .fillColor("#333333")
-      .text("Description", 50, tableTop, { bold: true })
-      .text("Details", 200, tableTop, { bold: true })
-      .text("Amount", 450, tableTop, { align: "right", bold: true });
+      .text("Description", 50, tableTop)
+      .text("Details", 200, tableTop)
+      .text("Amount", 450, tableTop, { align: "right" });
 
-    doc.moveTo(50, tableTop + 15).lineTo(550, tableTop + 15).stroke();
+    doc.moveTo(50, tableTop + 15).lineTo(550, tableTop + 15).strokeColor("#aaaaaa").lineWidth(1).stroke();
 
     // Table Content
     let y = tableTop + 30;
+    doc.font("Helvetica").fillColor("#000000"); // Reset font
 
     // Service
+    const serviceType = (booking.service || "Chauffeur Service").toUpperCase();
     doc.text("Service Type", 50, y);
-    doc.text(booking.service.toUpperCase(), 200, y);
+    doc.text(serviceType, 200, y);
     y += 20;
 
     // Vehicle
+    const vehicleName = booking.vehicle || "Vehicle Assignment";
+    const vehicleModel = booking.vehicleModel || "Standard";
     doc.text("Vehicle", 50, y);
-    doc.text(`${booking.vehicle} (${booking.vehicleModel || "Standard"})`, 200, y);
+    doc.text(`${vehicleName} (${vehicleModel})`, 200, y);
     y += 20;
 
     // Route
+    const pickup = booking.pickupLocation || "Pickup";
+    const drop = booking.dropLocation || "Dropoff";
     doc.text("Route", 50, y);
-    doc.text(`${booking.pickupLocation} -> ${booking.dropLocation}`, 200, y, { width: 250 });
+    doc.text(`${pickup} -> ${drop}`, 200, y, { width: 250 });
+
     // Adjust y for potentially long route text
-    const routeHeight = doc.heightOfString(`${booking.pickupLocation} -> ${booking.dropLocation}`, { width: 250 });
+    const routeHeight = doc.heightOfString(`${pickup} -> ${drop}`, { width: 250 });
     y += routeHeight + 10;
 
     // Date/Time
     doc.text("Pickup Time", 50, y);
-    doc.text(`${new Date(booking.pickupDate).toLocaleDateString()} at ${booking.pickupTime}`, 200, y);
+    const pDate = booking.pickupDate ? new Date(booking.pickupDate).toLocaleDateString() : "N/A";
+    const pTime = booking.pickupTime || "N/A";
+    doc.text(`${pDate} at ${pTime}`, 200, y);
     y += 20;
 
     // Enhancements
     if (booking.enhancements && Object.values(booking.enhancements).some(v => v)) {
       doc.text("Extras", 50, y);
-      const extras = booking.addons?.join(", ") || "None"; // simplistic view
+      const extras = booking.addons?.join(", ") || "None";
       doc.text(extras, 200, y);
       y += 20;
     }
 
-    doc.moveTo(50, y + 10).lineTo(550, y + 10).stroke();
+    doc.moveTo(50, y + 10).lineTo(550, y + 10).strokeColor("#cccccc").lineWidth(1).stroke();
 
     // Total
     y += 30;
     doc
       .fontSize(14)
+      .font("Helvetica-Bold")
       .fillColor("#000000")
-      .text("Total Amount", 300, y, { bold: true })
-      .text(`BHD ${booking.amount || 0}`, 450, y, { align: "right", bold: true });
+      .text("Total Amount", 300, y)
+      // BHD Currency
+      .text(`BHD ${booking.amount || 0}`, 450, y, { align: "right" });
 
     // Footer
     doc
       .fontSize(10)
+      .font("Helvetica")
       .fillColor("#999999")
-      .text("Thank you for your business.", 50, 700, { align: "center", width: 500 });
+      .text("Thank you for choosing Flyinco Chauffeur Service.", 50, 700, { align: "center", width: 500 });
 
     doc.end();
 
   } catch (error) {
-    console.error("Error generating invoice:", error);
-    // If headers already sent (due to pipe), can't send JSON error easily, but try:
+    console.error("Error generating invoice PDF:", error);
+    // If headers NOT sent, send 500 JSON. 
+    // If headers sent, stream will die, but at least backend logged it.
     if (!res.headersSent) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: "Failed to generate invoice PDF. " + error.message });
     }
   }
 };
