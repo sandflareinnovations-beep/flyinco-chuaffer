@@ -173,8 +173,7 @@ export const issueInvoice = async (req, res) => {
 
     /** ---------------- PDF DESIGN CONTENT ---------------- **/
 
-    // Logo Path - DISABLED TO DEBUG (User requirement: basic working invoice first)
-    /*
+    // Logo
     const logoPath = path.join(__dirname, "../assets/Flyinco.png");
     if (fs.existsSync(logoPath)) {
       try {
@@ -183,7 +182,6 @@ export const issueInvoice = async (req, res) => {
         console.error("Error embedding logo:", imgErr);
       }
     }
-    */
 
     // Company Info (Right Aligned)
     doc
@@ -206,7 +204,7 @@ export const issueInvoice = async (req, res) => {
     doc
       .fontSize(20)
       .fillColor("#333333")
-      .text("TAX INVOICE", 50, 160);
+      .text("INVOICE", 50, 160);
 
     const invoiceDate = new Date().toLocaleDateString();
 
