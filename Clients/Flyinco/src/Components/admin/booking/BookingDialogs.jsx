@@ -12,6 +12,7 @@ export default function BookingDialogs({
   openView, setOpenView,
   openAssign, setOpenAssign,
   openDelete, setOpenDelete,
+  openInvoice, setOpenInvoice, // NEW
   viewingBooking,
   assignForm = { driverId: "", driverName: "", vehicleType: "", amount: "" },
   setAssignForm,
@@ -19,7 +20,7 @@ export default function BookingDialogs({
   drivers = [],
   apiHandlers = {},
 }) {
-  const { assignDriver, addBooking } = apiHandlers;
+  const { assignDriver, addBooking, issueInvoice } = apiHandlers; // NEW
 
   const filteredDrivers = useMemo(() => {
     if (!assignForm?.vehicleType) return [];
@@ -143,6 +144,18 @@ export default function BookingDialogs({
           <DialogFooter>
             <Button onClick={() => setOpenDelete(false)}>Cancel</Button>
             <Button variant="destructive" onClick={handleDeleteConfirmed}>Delete</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 📄 Issue Invoice */}
+      <Dialog open={openInvoice} onOpenChange={setOpenInvoice}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Issue Invoice?</DialogTitle></DialogHeader>
+          <p>This will generate an invoice for <strong>{viewingBooking?.firstName} {viewingBooking?.lastName}</strong>.</p>
+          <DialogFooter>
+            <Button onClick={() => setOpenInvoice(false)}>Cancel</Button>
+            <Button onClick={() => issueInvoice && issueInvoice(viewingBooking._id)}>Confirm</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

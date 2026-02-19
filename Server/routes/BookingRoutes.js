@@ -8,6 +8,7 @@ import {
   updateBooking,
   adminDeleteBooking,
   assignDriver,
+  issueInvoice, // NEW
 } from "../controllers/bookingController.js";
 
 import { protect, admin, roleGuard } from "../middleware/authMiddleware.js";
@@ -27,6 +28,9 @@ router
 
 // Assign driver: admin + staff
 router.put("/:id/assign", protect, roleGuard("admin", "staff"), assignDriver);
+
+// Issue Invoice: admin + staff
+router.post("/:id/invoice", protect, roleGuard("admin", "staff"), issueInvoice); // NEW
 
 // ----------------- SHARED ROUTE -----------------
 router.route("/:id").get(protect, getBookingById);

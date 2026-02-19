@@ -31,6 +31,7 @@ export default function BookingManagement() {
   const [openView, setOpenView] = useState(false);
   const [openAssign, setOpenAssign] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [openInvoice, setOpenInvoice] = useState(false); // NEW
   const [targetDeleteId, setTargetDeleteId] = useState(null);
 
   // ---------------- NEW: Report Dialog State ----------------
@@ -92,6 +93,7 @@ export default function BookingManagement() {
         : null,
       createdAt: b.createdAt,
       updatedAt: b.updatedAt,
+      invoiceIssued: b.invoiceIssued || false, // NEW
     };
   }
 
@@ -191,6 +193,60 @@ export default function BookingManagement() {
     }
   }
 
+  async function issueInvoice(bookingId) {
+    if (!bookingId) {
+      alert("Error: No booking ID selected");
+      return;
+    }
+    try {
+      const response = await api.post(`/bookings/${bookingId}/invoice`, {}, {
+        responseType: 'blob' // Important for PDF download
+      });
+
+      // trigger download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `invoice-${bookingId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      // update local state
+      setBookings((prev) =>
+        prev.map((b) => (b._id === bookingId ? { ...b, invoiceIssued: true } : b))
+      );
+      setOpenInvoice(false);
+
+    } catch (err) {
+      console.error("Error issuing invoice:", err);
+      alert("Failed to issue invoice. See console for details.");
+    }
+  }
+
+  async function downloadInvoice(booking) {
+    if (!booking || !booking._id) return;
+    try {
+      // Re-use issue endpoint or a dedicated download endpoint 
+      // Ideally we should have a "download" endpoint that doesn't toggle flag, but 
+      // re-issuing is fine if it just regenerates PDF.
+      const response = await api.post(`/bookings/${booking._id}/invoice`, {}, {
+        responseType: 'blob'
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `invoice-${booking._id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error("Error downloading invoice:", err);
+      alert("Failed to download invoice.");
+    }
+  }
+
   /** ---------------- NEW: DOWNLOAD REPORT ---------------- **/
   async function handleDownload() {
     try {
@@ -285,6 +341,11 @@ export default function BookingManagement() {
     setOpenDelete(true);
   }
 
+  function openInvoiceDialog(b) {
+    setViewingBooking(b);
+    setOpenInvoice(true);
+  }
+
   function handleDeleteConfirmed() {
     if (targetDeleteId) {
       deleteBooking(targetDeleteId);
@@ -330,6 +391,8 @@ export default function BookingManagement() {
           openViewBooking,
           openAssignDialog,
           promptDelete,
+          openInvoiceDialog, // NEW
+          downloadInvoice, // NEW
         }}
       />
 
@@ -351,7 +414,10 @@ export default function BookingManagement() {
         apiHandlers={{
           addBooking,
           assignDriver,
+          issueInvoice, // NEW
         }}
+        openInvoice={openInvoice} // NEW
+        setOpenInvoice={setOpenInvoice} // NEW
       />
 
       {/* Report Dialog */}

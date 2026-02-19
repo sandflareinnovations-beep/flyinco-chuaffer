@@ -58,6 +58,7 @@ const bookingSchema = new mongoose.Schema(
       default: "pending",
     },
     amount: { type: Number, default: 0 },
+    invoiceIssued: { type: Boolean, default: false }, // NEW
   },
   { timestamps: true }
 );

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Settings, Eye, User, Trash, Car, MapPin } from "lucide-react";
+import { Settings, Eye, User, Trash, Car, MapPin, FileText } from "lucide-react";
 
 function hashStringToColor(str) {
   let hash = 0;
@@ -82,6 +82,11 @@ export default function BookingRow({ booking, handlers }) {
         <div className="text-xs text-muted-foreground mt-1">Luggage: {booking.luggage}</div>
         <div className="text-xs text-muted-foreground mt-1">
           Amount: {booking.amount != null ? `${booking.amount}` : "—"}
+          {booking.invoiceIssued && (
+            <span className="ml-2 text-green-600 font-medium text-[10px] border border-green-200 bg-green-50 px-1 rounded">
+              Invoiced
+            </span>
+          )}
         </div>
       </div>
 
@@ -128,6 +133,22 @@ export default function BookingRow({ booking, handlers }) {
               className="w-full text-left px-3 py-2 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-2 text-red-600"
             >
               <Trash size={14} /> Delete
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                // If already invoiced, we just download. If not, open dialog to create.
+                if (booking.invoiceIssued) {
+                  handlers.downloadInvoice(booking);
+                } else {
+                  handlers.openInvoiceDialog(booking);
+                }
+                setOpenMenu(false);
+              }}
+              className="w-full text-left px-3 py-2 flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-slate-800 text-blue-600"
+            >
+              <FileText size={14} />
+              {booking.invoiceIssued ? "Download Invoice" : "Issue Invoice"}
             </button>
           </div>
         )}
