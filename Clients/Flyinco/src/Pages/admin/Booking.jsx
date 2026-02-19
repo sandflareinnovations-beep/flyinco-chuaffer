@@ -200,19 +200,35 @@ export default function BookingManagement() {
     }
     try {
       const response = await api.post(`/bookings/${bookingId}/invoice`, {}, {
-        responseType: 'blob' // Important for PDF download
+        responseType: 'blob'
       });
 
-      // trigger download
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      // Check if response is actually JSON (error) disguised as Blob
+      if (response.data.type === 'application/json') {
+        const errorText = await response.data.text();
+        const errorJson = JSON.parse(errorText);
+        throw new Error(errorJson.message || "Failed to generate invoice");
+      }
+
+      // Check if blob is empty
+      if (response.data.size === 0) {
+        throw new Error("Received empty PDF file");
+      }
+
+      // Generate filename properly
+      const filename = `invoice-${bookingId}.pdf`;
+
+      // Trigger download
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `invoice-${bookingId}.pdf`);
+      link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
       link.remove();
+      window.URL.revokeObjectURL(url);
 
-      // update local state
+      // Update local state
       setBookings((prev) =>
         prev.map((b) => (b._id === bookingId ? { ...b, invoiceIssued: true } : b))
       );
@@ -220,30 +236,42 @@ export default function BookingManagement() {
 
     } catch (err) {
       console.error("Error issuing invoice:", err);
-      alert("Failed to issue invoice. See console for details.");
+      alert(`Failed to issue invoice: ${err.message}`);
     }
   }
 
   async function downloadInvoice(booking) {
     if (!booking || !booking._id) return;
     try {
-      // Re-use issue endpoint or a dedicated download endpoint 
-      // Ideally we should have a "download" endpoint that doesn't toggle flag, but 
-      // re-issuing is fine if it just regenerates PDF.
       const response = await api.post(`/bookings/${booking._id}/invoice`, {}, {
         responseType: 'blob'
       });
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      // Check if response is actually JSON (error) disguised as Blob
+      if (response.data.type === 'application/json') {
+        const errorText = await response.data.text();
+        const errorJson = JSON.parse(errorText);
+        throw new Error(errorJson.message || "Failed to download invoice");
+      }
+
+      // Check if blob is empty
+      if (response.data.size === 0) {
+        throw new Error("Received empty PDF file");
+      }
+
+      const filename = `invoice-${booking._id}.pdf`;
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `invoice-${booking._id}.pdf`);
+      link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
       link.remove();
+      window.URL.revokeObjectURL(url);
+
     } catch (err) {
       console.error("Error downloading invoice:", err);
-      alert("Failed to download invoice.");
+      alert(`Failed to download invoice: ${err.message}`);
     }
   }
 
