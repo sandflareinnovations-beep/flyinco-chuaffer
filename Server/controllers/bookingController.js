@@ -136,7 +136,7 @@ export const assignDriver = async (req, res) => {
   }
 };
 
-// ✅ Issue Invoice + Generate PDF
+// ✅ Issue Invoice + Generate PDF (File System Strategy)
 export const issueInvoice = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
@@ -149,37 +149,41 @@ export const issueInvoice = async (req, res) => {
       await booking.save();
     }
 
-    console.log("Generating invoice for:", booking._id);
+    console.log("Generating invoice (filesystem) for:", booking._id);
 
-    // Create PDF
-    const doc = new PDFDocument({ margin: 50 });
-
-    // Set headers
+    // Setup Temp File Path
     const idSuffix = booking._id.toString().slice(-4).toUpperCase();
     const invoiceId = `INV-${new Date().getFullYear()}-${idSuffix}`;
     const filename = `${invoiceId}.pdf`;
+    const tempDir = path.join(__dirname, "../temp");
 
-    res.setHeader("Content-disposition", `attachment; filename="${filename}"`);
-    res.setHeader("Content-type", "application/pdf");
+    // Ensure temp dir exists
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
 
-    doc.pipe(res);
+    const filePath = path.join(tempDir, filename);
+    const writeStream = fs.createWriteStream(filePath);
 
-    /** ---------------- PDF DESIGN ---------------- **/
+    // Create PDF Document
+    const doc = new PDFDocument({ margin: 50, bufferPages: true });
 
-    // Logo Path
+    // Pipe PDF to File Stream
+    doc.pipe(writeStream);
+
+    /** ---------------- PDF DESIGN CONTENT ---------------- **/
+
+    // Logo Path - DISABLED TO DEBUG (User requirement: basic working invoice first)
+    /*
     const logoPath = path.join(__dirname, "../assets/Flyinco.png");
-    console.log("Logo Path resolved to:", logoPath);
-
     if (fs.existsSync(logoPath)) {
       try {
         doc.image(logoPath, 50, 45, { width: 150 });
       } catch (imgErr) {
-        console.error("Error loading logo image:", imgErr);
-        // Continue without logo
+        console.error("Error embedding logo:", imgErr);
       }
-    } else {
-      console.warn("Logo file not found at:", logoPath);
     }
+    */
 
     // Company Info (Right Aligned)
     doc
@@ -205,6 +209,7 @@ export const issueInvoice = async (req, res) => {
       .text("TAX INVOICE", 50, 160);
 
     const invoiceDate = new Date().toLocaleDateString();
+
     doc
       .fontSize(10)
       .fillColor("#666666")
@@ -218,7 +223,7 @@ export const issueInvoice = async (req, res) => {
       .fillColor("#333333")
       .text("Bill To:", 300, 160, { bold: true });
 
-    // Safe Navigation for Customer Info
+    // Safe Navigation
     const fullName = `${booking.firstName || ""} ${booking.lastName || ""}`.trim() || "Valued Customer";
     const email = booking.email || "";
     const phone = booking.contactNumber || booking.phone || "";
@@ -262,11 +267,13 @@ export const issueInvoice = async (req, res) => {
     // Route
     const pickup = booking.pickupLocation || "Pickup";
     const drop = booking.dropLocation || "Dropoff";
-    doc.text("Route", 50, y);
-    doc.text(`${pickup} -> ${drop}`, 200, y, { width: 250 });
+    const routeText = `${pickup} -> ${drop}`;
 
-    // Adjust y for potentially long route text
-    const routeHeight = doc.heightOfString(`${pickup} -> ${drop}`, { width: 250 });
+    doc.text("Route", 50, y);
+    doc.text(routeText, 200, y, { width: 250 });
+
+    // Adjust y
+    const routeHeight = doc.heightOfString(routeText, { width: 250 });
     y += routeHeight + 10;
 
     // Date/Time
@@ -293,7 +300,6 @@ export const issueInvoice = async (req, res) => {
       .font("Helvetica-Bold")
       .fillColor("#000000")
       .text("Total Amount", 300, y)
-      // BHD Currency
       .text(`BHD ${booking.amount || 0}`, 450, y, { align: "right" });
 
     // Footer
@@ -303,14 +309,37 @@ export const issueInvoice = async (req, res) => {
       .fillColor("#999999")
       .text("Thank you for choosing Flyinco Chauffeur Service.", 50, 700, { align: "center", width: 500 });
 
+    // Finalize PDF file
     doc.end();
 
+    // Wait for file to fully write
+    writeStream.on('finish', () => {
+      // Send the file
+      res.download(filePath, filename, (err) => {
+        if (err) {
+          console.error("Error sending file:", err);
+          if (!res.headersSent) {
+            res.status(500).json({ message: "Could not send file." });
+          }
+        }
+        // Cleanup: delete temp file
+        fs.unlink(filePath, (unlinkErr) => {
+          if (unlinkErr) console.error("Error deleting temp file:", unlinkErr);
+        });
+      });
+    });
+
+    writeStream.on('error', (err) => {
+      console.error("Error writing PDF stream:", err);
+      if (!res.headersSent) {
+        res.status(500).json({ message: "Failed to write PDF file." });
+      }
+    });
+
   } catch (error) {
-    console.error("Error generating invoice PDF:", error);
-    // If headers NOT sent, send 500 JSON. 
-    // If headers sent, stream will die, but at least backend logged it.
+    console.error("Error generating invoice:", error);
     if (!res.headersSent) {
-      res.status(500).json({ message: "Failed to generate invoice PDF. " + error.message });
+      res.status(500).json({ message: "Failed to generate invoice PDF. " + (error.message || "Unknown Error") });
     }
   }
 };
